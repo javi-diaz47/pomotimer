@@ -9,8 +9,8 @@ function Timer() {
           <span className={styles.timer_name}>Work</span>
           <span className={styles.timer_sections}>1/4</span>
         </div>
-     </article>
-   </section>
+      </article>
+    </section>
   );
 }
 
