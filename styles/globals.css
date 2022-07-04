@@ -5,19 +5,19 @@
   --yellow: #FEDA79;
   --turquoise: #74F0E6;
   --blue: #74E6FF;
-  --bg: #F5F5F5;
+  --bg: #F5F5F5; 
 }
 
 @font-face {
   font-family: 'Poppins';
-  src: url('../public/assets/Poppins-Regular.ttf');
+  src: url('../public/assets/fonts/Poppins-Regular.ttf');
   font-style: normal;
   font-weight: normal;
 }
 
 @font-face {
   font-family: 'Poppins';
-  src: url('../public/assets/Poppins-Bold.ttf');
+  src: url('../public/assets/fonts/Poppins-Bold.ttf');
   font-style: normal;
   font-weight: bold;
 }
@@ -27,7 +27,8 @@ html,
 body {
   padding: 0;
   margin: 0;
-  font-family: 'Poppins' -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+  color: var(--secondary);
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 

@@ -1,7 +1,39 @@
 .card {
-  
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  font-size: 1.2rem;
+  border-radius: 14px;
+  box-shadow: 20px 20px 60px #D9D9D9, 
+              -20px -20px 60px #FFFFFF;
+}
+
+.card_wrapper {
+  width: 80%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .card h2 {
-  color: var(--turquoise);
+  margin: 0;
+  text-transform: capitalize;
+}
+
+.icon {
+  width: 2rem;
+  height: 2rem;
+  transform: scale(1.2);
+  padding: 1rem;
+  border-radius: 50%;
+  display: grid;
+  place-content: center;
+  background-color: var(--primary);
+}
+
+.time {
+  color: var(--primary);
+  font-weight: bold;
 }

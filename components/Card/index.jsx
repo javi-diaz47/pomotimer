@@ -1,10 +1,23 @@
+import { getLocationOrigin } from 'next/dist/shared/lib/utils';
 import styles from '../../styles/components/Card/index.module.css';
+import { getIcon } from '../../utils/getIcon';
 
-function Card() {
+function Card({icon, title, time}) {
+  
   return (
-    <div className={styles.card}>
-      <h2>This is a Card</h2>
-    </div>
+    <article className={styles.card}>
+      <div className={styles.card_wrapper}>
+        <div className={styles.icon}>
+          {
+            getIcon(icon)
+          }
+        </div>
+        <h2>{title}</h2>
+        <span className={styles.time}>
+          { time.focus }/{ time.break } 
+          </span>
+      </div>
+   </article>
   );
 }
 

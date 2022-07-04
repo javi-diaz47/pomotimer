@@ -1,14 +1,17 @@
 .main {
-  width: 100%;
-  display: flex;
-  justify-content: center;
+  display: grid;
+  height: 100vh;
+  place-content: center;
 }
 
 .title {
-  font-family: 'Poppins';
-  color: var(--secondary);
+  font-size: 4rem;
 }
 
 .title span {
   color: var(--primary);
+}
+
+.cards {
+  padding: 1rem;
 }
