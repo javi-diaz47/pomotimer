@@ -1,0 +1,7 @@
+.title {
+  font-size: 4rem;
+}
+
+.title span {
+  color: var(--primary);
+}

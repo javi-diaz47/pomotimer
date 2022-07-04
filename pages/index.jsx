@@ -1,6 +1,6 @@
 import Head from 'next/head';
-import { Card } from '../components/Card';
-import { DEFAULT_CARDS } from '../contants/defaultCards';
+import { Cards } from '../components/Cards';
+import { Header } from '../components/Header';
 import styles from '../styles/Home.module.css';
 
 export default function Home() {
@@ -13,15 +13,8 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <h2 className={styles.title}>
-          Pomo
-          <span>Timer</span>
-        </h2>
-        <section className={styles.cards}>
-          {DEFAULT_CARDS.map((card) => (
-            <Card {...card} />
-          ))}
-        </section>
+        <Header />
+        <Cards />
       </main>
     </div>
   );

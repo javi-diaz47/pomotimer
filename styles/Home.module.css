@@ -4,13 +4,7 @@
   place-content: center;
 }
 
-.title {
-  font-size: 4rem;
-}
 
-.title span {
-  color: var(--primary);
-}
 
 .cards {
   padding: 1rem;

@@ -1,5 +1,6 @@
 export const DEFAULT_CARDS = [
   {
+    key: 'work-example',
     icon: 'work',
     title: 'Work',
     time: {
@@ -8,6 +9,7 @@ export const DEFAULT_CARDS = [
     },
   },
   {
+    key: 'read-example',
     icon: 'read',
     title: 'read',
     time: {
