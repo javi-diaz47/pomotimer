@@ -1,3 +1,4 @@
+import { BurgerBtn } from '@components/Icons/BurgerBtn';
 import styles from '@styles/components/Header/index.module.css';
 
 function Header() {
@@ -7,6 +8,9 @@ function Header() {
         Pomo
         <span>Timer</span>
       </h2>
+      <button className={styles.burger_btn} type="button">
+        <BurgerBtn />
+      </button>
     </header>
   );
 }

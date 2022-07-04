@@ -1,11 +1,9 @@
 .main {
-  display: grid;
-  height: 100vh;
-  place-content: center;
+
 }
 
-
-
 .cards {
+  display: grid;
   padding: 1rem;
+  gap: 1rem;
 }

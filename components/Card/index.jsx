@@ -1,6 +1,6 @@
 import { getLocationOrigin } from 'next/dist/shared/lib/utils';
-import styles from '../../styles/components/Card/index.module.css';
 import { getIcon } from '../../utils/getIcon';
+import styles from '../../styles/components/Card/index.module.css';
 
 function Card({icon, title, time}) {
   
