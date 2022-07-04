@@ -1,6 +1,8 @@
 .main {
-
+  display: grid;
+  gap: 2rem;
 }
+
 
 .cards {
   display: grid;

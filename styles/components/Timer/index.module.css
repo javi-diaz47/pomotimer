@@ -1,0 +1,44 @@
+.timer_wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.timer {
+  width: calc(100% - 4rem);
+  aspect-ratio: 1/1;
+  border-radius: 50%;
+  box-shadow: 4px 4px 30px #D86971;
+  display: grid;
+  place-content: center;
+  /* grid-template-rows: 1fr .6fr .4fr; */
+  /* display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; */
+  font-weight: bold;
+}
+
+.timer div {
+  display: grid;
+  justify-content: center;
+}
+
+.timer h2 {
+  font-size: 4.5rem;
+  line-height: 4.5rem;
+  margin: 0;
+}
+
+.timer div span {
+  text-align: center;
+}
+
+.timer_name {
+  font-size: 2rem;
+}
+
+.timer_sections {
+  font-size: 1.8rem;
+  font-weight: normal;
+}

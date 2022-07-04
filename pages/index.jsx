@@ -1,3 +1,4 @@
+import { Timer } from '@components/Timer';
 import Head from 'next/head';
 import { Cards } from '../components/Cards';
 import { Header } from '../components/Header';
@@ -12,8 +13,9 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Header />
       <main className={styles.main}>
+        <Header />
+        <Timer />
         <Cards />
       </main>
     </div>
