@@ -1,10 +1,53 @@
 import { Timer } from '@components/Timer';
+import { getColor } from '@utils/getColor';
+import gsap from 'gsap';
 import Head from 'next/head';
+import { useState, useEffect } from 'react';
 import { Cards } from '../components/Cards';
 import { Header } from '../components/Header';
 import styles from '../styles/Home.module.css';
 
 export default function Home() {
+  const [onTimer, setOnTimer] = useState(null);
+
+  const cardTime = {
+    min: 1,
+    sec: 0,
+  };
+
+  const [time, setTime] = useState(cardTime);
+
+  const newTime = cardTime;
+
+  const tween = () => gsap.to(newTime, {
+    min: time.sec === 0 && time.min > 0? time.min - 1 : time.min,
+    sec: time.sec - 1 > -1 ? time.sec - 1 : 60,
+    delay: 1,
+    onComplete: () => {
+      setTime(newTime);
+    },
+  });
+
+  useEffect(() => {
+    if (onTimer) {
+      if (time.sec > 0 || time.min > 0) {
+        tween().play();
+      } else {
+        setOnTimer(false);
+      }
+    } else {
+      tween().pause();
+    }
+  }, [time, onTimer]);
+
+  const handlerOnTimer = () => {
+    if (onTimer) {
+      setOnTimer(false);
+    } else {
+      setOnTimer(true);
+    }
+  };
+
   return (
     <div className={styles.container}>
       <Head>
@@ -15,8 +58,20 @@ export default function Home() {
 
       <main className={styles.main}>
         <Header />
-        <Timer />
+        <Timer
+          time={time}
+        />
         <Cards />
+        <button
+          onClick={handlerOnTimer}
+          className={styles.start_timer}
+          type="button"
+          style={onTimer ? { backgroundColor: getColor('yellow') } : {}}
+        >
+          {
+            !onTimer ? 'start' : 'pause'
+          }
+        </button>
       </main>
     </div>
   );
