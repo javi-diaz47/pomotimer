@@ -2,51 +2,63 @@ import { Timer } from '@components/Timer';
 import { getColor } from '@utils/getColor';
 import gsap from 'gsap';
 import Head from 'next/head';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Cards } from '../components/Cards';
 import { Header } from '../components/Header';
 import styles from '../styles/Home.module.css';
 
 export default function Home() {
-  const [onTimer, setOnTimer] = useState(null);
-
   const cardTime = {
-    min: 1,
-    sec: 0,
+    min: 0,
+    sec: 10,
   };
 
+  // countdown has 3 states
+  // start: init the countdown ( and restart the countdown)
+  // pause: pause the countdown
+  // continue: continue the countdown
+  const [onCountdown, setOnCountdown] = useState(null);
   const [time, setTime] = useState(cardTime);
 
   const newTime = cardTime;
-
-  const tween = () => gsap.to(newTime, {
-    min: time.sec === 0 && time.min > 0? time.min - 1 : time.min,
-    sec: time.sec - 1 > -1 ? time.sec - 1 : 60,
-    delay: 1,
-    onComplete: () => {
-      setTime(newTime);
-    },
-  });
-
-  useEffect(() => {
-    if (onTimer) {
-      if (time.sec > 0 || time.min > 0) {
-        tween().play();
-      } else {
-        setOnTimer(false);
-      }
-    } else {
-      tween().pause();
-    }
-  }, [time, onTimer]);
+  const countdown = useRef();
 
   const handlerOnTimer = () => {
-    if (onTimer) {
-      setOnTimer(false);
-    } else {
-      setOnTimer(true);
+    if (onCountdown === null) {
+      setOnCountdown('start');
+    } else if (onCountdown === 'start' || onCountdown === 'continue') {
+      countdown.current.pause();
+      setOnCountdown('pause');
+    } else if (onCountdown === 'pause') {
+      setOnCountdown('continue');
+      countdown.current.play();
     }
   };
+
+  // To the user there are only 2 states
+  // start: start and continue the counter
+  // pause: pause the counter
+  const getCountdownButtonText = () => {
+    if (onCountdown === null) return 'start';
+    if (onCountdown === 'start' || onCountdown === 'continue') return 'pause';
+    if (onCountdown === 'pause') return 'start';
+  };
+
+  useEffect(() => {
+    if (onCountdown === 'start' && (time.sec > 0 || time.min > 0)) {
+      countdown.current = gsap.to(newTime, {
+        sec: 0,
+        duration: cardTime.min * 60 + cardTime.sec,
+        onUpdate: () => {
+          setTime({
+            min: 0,
+            sec: Math.round(newTime.sec),
+          });
+        },
+      });
+      countdown.current.play();
+    }
+  }, [onCountdown]);
 
   return (
     <div className={styles.container}>
@@ -58,18 +70,16 @@ export default function Home() {
 
       <main className={styles.main}>
         <Header />
-        <Timer
-          time={time}
-        />
+        <Timer time={time} />
         <Cards />
         <button
           onClick={handlerOnTimer}
           className={styles.start_timer}
           type="button"
-          style={onTimer ? { backgroundColor: getColor('yellow') } : {}}
+          style={onCountdown ? { backgroundColor: getColor('yellow') } : {}}
         >
           {
-            !onTimer ? 'start' : 'pause'
+            getCountdownButtonText()
           }
         </button>
       </main>
