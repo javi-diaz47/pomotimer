@@ -9,9 +9,15 @@ import styles from '../styles/Home.module.css';
 
 export default function Home() {
   const cardTime = {
-    min: 0,
-    sec: 10,
+    min: 2,
+    sec: 1,
   };
+  const getTotalSec = ({ min, sec }) => min * 60 + sec;
+
+  const getMinSecFormat = ({ sec }) => ({
+    min: Math.trunc(sec / 60),
+    sec: Math.trunc(sec % 60),
+  });
 
   // countdown has 3 states
   // start: init the countdown ( and restart the countdown)
@@ -20,7 +26,10 @@ export default function Home() {
   const [onCountdown, setOnCountdown] = useState(null);
   const [time, setTime] = useState(cardTime);
 
-  const newTime = cardTime;
+  const countdownTime = {
+    sec: getTotalSec(cardTime),
+  };
+
   const countdown = useRef();
 
   const handlerOnTimer = () => {
@@ -46,14 +55,12 @@ export default function Home() {
 
   useEffect(() => {
     if (onCountdown === 'start' && (time.sec > 0 || time.min > 0)) {
-      countdown.current = gsap.to(newTime, {
+      countdown.current = gsap.to(countdownTime, {
         sec: 0,
-        duration: cardTime.min * 60 + cardTime.sec,
+        ease: 'none',
+        duration: getTotalSec(cardTime),
         onUpdate: () => {
-          setTime({
-            min: 0,
-            sec: Math.round(newTime.sec),
-          });
+          setTime(getMinSecFormat(countdownTime));
         },
       });
       countdown.current.play();
