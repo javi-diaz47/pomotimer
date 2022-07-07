@@ -1,61 +1,44 @@
 import { Timer } from '@components/Timer';
+import { onCountdownDefault } from '@contants/defaultOnCountdown';
 import { getColor } from '@utils/getColor';
+import { getMinSecFormat, getTotalSec } from '@utils/TimeFormatConverter';
 import gsap from 'gsap';
 import Head from 'next/head';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useReducer} from 'react';
+import { COUNTDOWN_ACTIONS, countdownReducer, COUNTDOWN_COUNTDOWN_ACTIONS } from 'reducer/countdownReducer';
 import { Cards } from '../components/Cards';
 import { Header } from '../components/Header';
 import styles from '../styles/Home.module.css';
 
 export default function Home() {
+  const [onCountdown, dispatch] = useReducer(countdownReducer, onCountdownDefault);
+
   const cardTime = {
     min: 2,
     sec: 1,
   };
-  const getTotalSec = ({ min, sec }) => min * 60 + sec;
 
-  const getMinSecFormat = ({ sec }) => ({
-    min: Math.trunc(sec / 60),
-    sec: Math.trunc(sec % 60),
-  });
-
-  // countdown has 3 states
-  // start: init the countdown ( and restart the countdown)
-  // pause: pause the countdown
-  // continue: continue the countdown
-  const [onCountdown, setOnCountdown] = useState(null);
   const [time, setTime] = useState(cardTime);
 
+  const countdownAnimation = useRef();
   const countdownTime = {
     sec: getTotalSec(cardTime),
   };
 
-  const countdown = useRef();
-
   const handlerOnTimer = () => {
-    if (onCountdown === null) {
-      setOnCountdown('start');
-    } else if (onCountdown === 'start' || onCountdown === 'continue') {
-      countdown.current.pause();
-      setOnCountdown('pause');
-    } else if (onCountdown === 'pause') {
-      setOnCountdown('continue');
-      countdown.current.play();
+    if (onCountdown.status === null) {
+      dispatch(COUNTDOWN_ACTIONS.START);
+    } else if (onCountdown.status === COUNTDOWN_ACTIONS.START
+      || onCountdown.status === COUNTDOWN_ACTIONS.CONTINUE) {
+      dispatch(COUNTDOWN_ACTIONS.PAUSE);
+    } else {
+      dispatch(COUNTDOWN_ACTIONS.CONTINUE);
     }
   };
 
-  // To the user there are only 2 states
-  // start: start and continue the counter
-  // pause: pause the counter
-  const getCountdownButtonText = () => {
-    if (onCountdown === null) return 'start';
-    if (onCountdown === 'start' || onCountdown === 'continue') return 'pause';
-    if (onCountdown === 'pause') return 'start';
-  };
-
   useEffect(() => {
-    if (onCountdown === 'start' && (time.sec > 0 || time.min > 0)) {
-      countdown.current = gsap.to(countdownTime, {
+    if (onCountdown.status === COUNTDOWN_ACTIONS.START) {
+      countdownAnimation.current = gsap.to(countdownTime, {
         sec: 0,
         ease: 'none',
         duration: getTotalSec(cardTime),
@@ -63,8 +46,9 @@ export default function Home() {
           setTime(getMinSecFormat(countdownTime));
         },
       });
-      countdown.current.play();
     }
+    if (onCountdown.status === COUNTDOWN_ACTIONS.PAUSE) countdownAnimation.current.pause();
+    if (onCountdown.status === COUNTDOWN_ACTIONS.CONTINUE) countdownAnimation.current.play();
   }, [onCountdown]);
 
   return (
@@ -86,7 +70,7 @@ export default function Home() {
           style={onCountdown ? { backgroundColor: getColor('yellow') } : {}}
         >
           {
-            getCountdownButtonText()
+            onCountdown.btnText
           }
         </button>
       </main>
