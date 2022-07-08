@@ -1,12 +1,30 @@
 export const DEFAULT_CARDS = [
   {
+    key: 'work-xample',
+    icon: 'work',
+    title: 'Work',
+    color: 'red',
+    time: {
+      focus: {
+        min: 1,
+      },
+      break: {
+        min: 5,
+      },
+    },
+  },
+  {
     key: 'work-example',
     icon: 'work',
     title: 'Work',
     color: 'red',
     time: {
-      focus: 25,
-      break: 5,
+      focus: {
+        min: 25,
+      },
+      break: {
+        min: 5,
+      },
     },
   },
   {
@@ -15,8 +33,14 @@ export const DEFAULT_CARDS = [
     title: 'read',
     color: 'blue',
     time: {
-      focus: 30,
-      break: 5,
+      focus: {
+        min: 30,
+        sec: 0,
+      },
+      break: {
+        min: 5,
+        sec: 0,
+      },
     },
   },
   {
@@ -25,8 +49,14 @@ export const DEFAULT_CARDS = [
     title: 'write',
     color: 'yellow',
     time: {
-      focus: 25,
-      break: 5,
+      focus: {
+        min: 35,
+        sec: 0,
+      },
+      break: {
+        min: 5,
+        sec: 0,
+      },
     },
   },
 ];

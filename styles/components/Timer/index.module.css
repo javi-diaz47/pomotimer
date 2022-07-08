@@ -6,6 +6,7 @@
 
 .timer {
   width: calc(100% - 4rem);
+  max-width: 18rem;
   aspect-ratio: 1/1;
   border-radius: 50%;
   box-shadow: 4px 4px 30px #D86971;
@@ -17,6 +18,7 @@
   align-items: center;
   justify-content: center; */
   font-weight: bold;
+  position: relative;
 }
 
 .timer div {
@@ -41,4 +43,15 @@
 .timer_sections {
   font-size: 1.8rem;
   font-weight: normal;
+}
+
+.load {
+  /* width: 1.6rem; */
+  /* height: 1.6rem; */
+  border-radius: 50%;
+  background-color: var(--secondary);
+  position: absolute;
+  left: 50%;
+  top: -.4rem;
+  transform: translate(-50%, -50%);
 }

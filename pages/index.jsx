@@ -1,51 +1,77 @@
 import { Timer } from '@components/Timer';
+import { DEFAULT_CARDS } from '@contants/defaultCards';
 import { onCountdownDefault } from '@contants/defaultOnCountdown';
 import { getColor } from '@utils/getColor';
-import { getMinSecFormat, getTotalSec } from '@utils/TimeFormatConverter';
+import {
+  setToMinSecFormat,
+  getTotalSec,
+  minToMinSecFormat,
+} from '@utils/TimeFormatConverter';
 import gsap from 'gsap';
 import Head from 'next/head';
-import { useState, useEffect, useRef, useReducer} from 'react';
-import { COUNTDOWN_ACTIONS, countdownReducer, COUNTDOWN_COUNTDOWN_ACTIONS } from 'reducer/countdownReducer';
+import { useState, useEffect, useRef, useReducer } from 'react';
+import {
+  COUNTDOWN_ACTIONS,
+  countdownReducer,
+  COUNTDOWN_COUNTDOWN_ACTIONS,
+} from 'reducer/countdownReducer';
 import { Cards } from '../components/Cards';
 import { Header } from '../components/Header';
 import styles from '../styles/Home.module.css';
 
 export default function Home() {
-  const [onCountdown, dispatch] = useReducer(countdownReducer, onCountdownDefault);
+  const [onCountdown, dispatch] = useReducer(
+    countdownReducer,
+    onCountdownDefault,
+  );
 
-  const cardTime = {
-    min: 2,
-    sec: 1,
-  };
-
-  const [time, setTime] = useState(cardTime);
+  const [time, setTime] = useState(minToMinSecFormat(DEFAULT_CARDS[0].time.focus));
 
   const countdownAnimation = useRef();
-  const countdownTime = {
-    sec: getTotalSec(cardTime),
-  };
 
   const handlerOnTimer = () => {
     if (onCountdown.status === null) {
       dispatch(COUNTDOWN_ACTIONS.START);
-    } else if (onCountdown.status === COUNTDOWN_ACTIONS.START
-      || onCountdown.status === COUNTDOWN_ACTIONS.CONTINUE) {
+    } else if (
+      onCountdown.status === COUNTDOWN_ACTIONS.START ||
+      onCountdown.status === COUNTDOWN_ACTIONS.CONTINUE
+    ) {
       dispatch(COUNTDOWN_ACTIONS.PAUSE);
     } else {
       dispatch(COUNTDOWN_ACTIONS.CONTINUE);
     }
   };
 
+  const loadRef = useRef(null);
+
   useEffect(() => {
     if (onCountdown.status === COUNTDOWN_ACTIONS.START) {
-      countdownAnimation.current = gsap.to(countdownTime, {
-        sec: 0,
-        ease: 'none',
-        duration: getTotalSec(cardTime),
-        onUpdate: () => {
-          setTime(getMinSecFormat(countdownTime));
-        },
-      });
+      const countdownTime = time;
+      countdownAnimation.current = gsap.timeline()
+        .to(loadRef.current, {
+          // scale: 1,
+          width: '1.6rem',
+          height: '1.6rem',
+          duration: 0.5,
+          ease: 'back.out(3)',
+          // backgroundColor: 'red',
+        })
+        .to(countdownTime, {
+          min: 0,
+          ease: 'none',
+          duration: getTotalSec(time),
+          delay: 1,
+          // animationDelay: 1,
+          onUpdate: () => {
+            setTime(minToMinSecFormat(countdownTime));
+          },
+        })
+        .to(loadRef.current, {
+          rotateZ: '360deg',
+          transformOrigin: '50% 10.4rem',
+          duration: getTotalSec(time),
+          delay: 1,
+        }, 0);
     }
     if (onCountdown.status === COUNTDOWN_ACTIONS.PAUSE) countdownAnimation.current.pause();
     if (onCountdown.status === COUNTDOWN_ACTIONS.CONTINUE) countdownAnimation.current.play();
@@ -61,17 +87,15 @@ export default function Home() {
 
       <main className={styles.main}>
         <Header />
-        <Timer time={time} />
-        <Cards />
+        <Timer time={time} ref={loadRef} />
+        <Cards setTime={setTime} />
         <button
           onClick={handlerOnTimer}
           className={styles.start_timer}
           type="button"
           style={onCountdown ? { backgroundColor: getColor('yellow') } : {}}
         >
-          {
-            onCountdown.btnText
-          }
+          {onCountdown.btnText}
         </button>
       </main>
     </div>
