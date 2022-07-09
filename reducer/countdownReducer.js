@@ -4,6 +4,7 @@ export const COUNTDOWN_ACTIONS = {
   START: 'start',
   PAUSE: 'pause',
   CONTINUE: 'continue',
+  KILL: 'kill',
 };
 
 export const countdownReducer = (state, action) => {
@@ -14,6 +15,8 @@ export const countdownReducer = (state, action) => {
       return { ...state, status: 'pause', btnText: 'start' };
     case COUNTDOWN_ACTIONS.CONTINUE:
       return { ...state, status: 'continue', btnText: 'pause' };
+    case COUNTDOWN_ACTIONS.KILL:
+      return { ...state, status: 'kill', btnText: 'start' };
     default:
       return onCountdownDefault;
   }

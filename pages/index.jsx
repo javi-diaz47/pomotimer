@@ -22,6 +22,8 @@ export default function Home() {
   const countdownAnimation = useRef(null);
 
   const loadRef = useRef(null);
+  const cardRef = useRef(null);
+  const timerBtnRef = useRef(null);
 
   useEffect(() => {
     if (onCountdown.status === COUNTDOWN_ACTIONS.START) {
@@ -31,10 +33,17 @@ export default function Home() {
         setTime,
         countdownTime,
         loadRef,
+        cardRef,
+        timerBtnRef,
       });
     }
     if (onCountdown.status === COUNTDOWN_ACTIONS.PAUSE) countdownAnimation.current.pause();
     if (onCountdown.status === COUNTDOWN_ACTIONS.CONTINUE) countdownAnimation.current.play();
+    if (onCountdown.status === COUNTDOWN_ACTIONS.KILL) {
+      countdownAnimation.current.progress(0);
+      countdownAnimation.current.kill();
+      // setTime(minToMinSecFormat(DEFAULT_CARDS[0].time.focus))
+    }
   }, [onCountdown]);
 
   return (
@@ -48,8 +57,9 @@ export default function Home() {
       <main className={styles.main}>
         <Header />
         <Timer time={time} ref={loadRef} />
-        <Cards setTime={setTime} />
+        <Cards setTime={setTime} ref={cardRef} />
         <TimerBtn
+          ref={timerBtnRef}
           onCountdown={onCountdown}
           dispatch={dispatch}
           COUNTDOWN_ACTIONS={COUNTDOWN_ACTIONS}

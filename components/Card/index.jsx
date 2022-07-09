@@ -14,7 +14,7 @@ function Card(props) {
   return (
     <button
       onClick={() => setTime(minToMinSecFormat(time.focus))}
-      className={styles.card}
+      className={`${styles.card} card_ref`}
       type="button"
     >
       <div className={styles.card_wrapper}>

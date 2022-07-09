@@ -6,13 +6,29 @@ export const countdownTimerAnimation = ({
   setTime,
   countdownTime,
   loadRef,
-}) =>
-  gsap
+  cardRef,
+  timerBtnRef,
+}) => {
+  const q = gsap.utils.selector(cardRef);
+  return gsap
     .timeline()
     .to(loadRef.current, {
       width: '10%',
       duration: 0.5,
       ease: 'back.out(3)',
+    })
+    .to(
+      q('.card_ref'),
+      {
+        y: 100,
+        opacity: 0,
+        stagger: 0.1,
+      },
+      0
+    )
+    .to(timerBtnRef.current, {
+      y: -300,
+      duration: 1,
     })
     .to(countdownTime, {
       min: 0,
@@ -33,3 +49,4 @@ export const countdownTimerAnimation = ({
       },
       0
     );
+};
