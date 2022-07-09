@@ -10,14 +10,3 @@
   gap: 1rem;
 }
 
-.start_timer {
-  justify-self: center;
-  width: 40%;
-  height: auto;
-  font-size: 1.8rem;
-  font-weight: bold;
-  padding: 0.75rem 0;
-  border-radius: 1rem;
-  background-color: var(--primary);
-  color: var(--secondary);
-}

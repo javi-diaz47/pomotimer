@@ -46,8 +46,9 @@
 }
 
 .load {
-  /* width: 1.6rem; */
+  /* width: 10%; */
   /* height: 1.6rem; */
+  aspect-ratio: 1/1;
   border-radius: 50%;
   background-color: var(--secondary);
   position: absolute;
