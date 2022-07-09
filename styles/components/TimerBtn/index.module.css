@@ -1,4 +1,4 @@
-.start_timer {
+.timer_btn {
   justify-self: center;
   width: 40%;
   height: auto;
@@ -6,6 +6,8 @@
   font-weight: bold;
   padding: 0.75rem 0;
   border-radius: 1rem;
+  border: 0;
+  text-transform: capitalize;
   background-color: var(--primary);
   color: var(--secondary);
 }

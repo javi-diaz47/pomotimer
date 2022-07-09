@@ -18,7 +18,7 @@ function TimerBtn({ onCountdown, dispatch, COUNTDOWN_ACTIONS }) {
   return (
     <button
       onClick={handlerOnTimer}
-      className={styles.start_timer}
+      className={styles.timer_btn}
       type="button"
       style={onCountdown? { backgroundColor: getColor('yellow') } : {}}
     >

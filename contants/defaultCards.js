@@ -1,8 +1,8 @@
 export const DEFAULT_CARDS = [
   {
-    key: 'work-xample',
+    key: 'test',
     icon: 'work',
-    title: 'Work',
+    title: 'test',
     color: 'red',
     time: {
       focus: {
