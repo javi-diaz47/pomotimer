@@ -2,8 +2,9 @@ import { Timer } from '@components/Timer';
 import { TimerBtn } from '@components/TimerBtn';
 import { DEFAULT_CARDS } from '@contants/defaultCards';
 import { onCountdownDefault } from '@contants/defaultOnCountdown';
-import { minToMinSecFormat } from '@utils/TimeFormatConverter';
+import { getTotalSec, minToMinSecFormat } from '@utils/TimeFormatConverter';
 import { countdownTimerAnimation } from 'animations/countdownTimerAnimation';
+import gsap from 'gsap';
 import Head from 'next/head';
 import { useState, useEffect, useRef, useReducer } from 'react';
 import { COUNTDOWN_ACTIONS, countdownReducer } from 'reducer/countdownReducer';
@@ -18,6 +19,7 @@ export default function Home() {
   );
 
   const [time, setTime] = useState(minToMinSecFormat(DEFAULT_CARDS[0].time.focus));
+  const [set, setSet] = useState({ set: 1, onBreak: false });
 
   const countdownAnimation = useRef(null);
 
@@ -25,12 +27,44 @@ export default function Home() {
   const cardRef = useRef(null);
   const timerBtnRef = useRef(null);
 
+  const updateHandler = (newTime) => {
+    // look if set is even then run this
+    setTime(minToMinSecFormat(newTime));
+   // on the other hand do the break
+  };
+
+  const completeHandler = () => {
+    const newSet = {
+      ...set,
+      onBreak: !set.onBreak,
+    };
+
+    if (!newSet.onBreak) {
+      newSet.set += 1;
+    }
+
+    setSet(newSet);
+
+    const newTime = set.onBreak ? minToMinSecFormat(DEFAULT_CARDS[0].time.focus) :
+    minToMinSecFormat(DEFAULT_CARDS[0].time.break) ;
+    console.log(newTime)
+    setTime(newTime);
+    if (set.set === 4) {
+      setSet({ set: 1, onBreak: false });
+      dispatch(COUNTDOWN_ACTIONS.KILL);
+    } else {
+      dispatch(COUNTDOWN_ACTIONS.KILL);
+      dispatch(COUNTDOWN_ACTIONS.START);
+    }
+  };
+
   useEffect(() => {
     if (onCountdown.status === COUNTDOWN_ACTIONS.START) {
       const countdownTime = time;
       countdownAnimation.current = countdownTimerAnimation({
-        time,
-        setTime,
+        updateHandler,
+        duration: getTotalSec(time),
+        completeHandler,
         countdownTime,
         loadRef,
         cardRef,
@@ -42,7 +76,6 @@ export default function Home() {
     if (onCountdown.status === COUNTDOWN_ACTIONS.KILL) {
       countdownAnimation.current.progress(0);
       countdownAnimation.current.kill();
-      setTime(minToMinSecFormat(DEFAULT_CARDS[0].time.focus));
     }
   }, [onCountdown]);
 
@@ -56,7 +89,7 @@ export default function Home() {
 
       <main className={styles.main}>
         <Header />
-        <Timer time={time} ref={loadRef} />
+        <Timer time={time} set={set} ref={loadRef} />
         <Cards setTime={setTime} ref={cardRef} />
         <TimerBtn
           ref={timerBtnRef}
