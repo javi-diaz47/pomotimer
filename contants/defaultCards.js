@@ -9,7 +9,7 @@ export const DEFAULT_CARDS = [
         min: 1,
       },
       break: {
-        min: 5,
+        min: 0.1,
       },
     },
   },

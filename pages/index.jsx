@@ -42,7 +42,7 @@ export default function Home() {
     if (onCountdown.status === COUNTDOWN_ACTIONS.KILL) {
       countdownAnimation.current.progress(0);
       countdownAnimation.current.kill();
-      // setTime(minToMinSecFormat(DEFAULT_CARDS[0].time.focus))
+      setTime(minToMinSecFormat(DEFAULT_CARDS[0].time.focus));
     }
   }, [onCountdown]);
 

@@ -22,6 +22,7 @@ export const countdownTimerAnimation = ({
       {
         y: 100,
         opacity: 0,
+        duration: 0.3,
         stagger: 0.1,
       },
       0

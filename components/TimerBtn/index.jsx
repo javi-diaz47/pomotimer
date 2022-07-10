@@ -5,7 +5,7 @@ import styles from '@styles/components/TimerBtn/index.module.css';
 const TimerBtn = forwardRef((props, ref) => {
   const { onCountdown, dispatch, COUNTDOWN_ACTIONS } = props;
   const handlerOnTimer = () => {
-    if (onCountdown.status === null) {
+    if (onCountdown.status === null || onCountdown.status === COUNTDOWN_ACTIONS.KILL) {
       dispatch(COUNTDOWN_ACTIONS.START);
     } else if (
       onCountdown.status === COUNTDOWN_ACTIONS.START
