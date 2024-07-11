@@ -1,33 +1,8 @@
-import { useState } from "react";
+import { DEFAULT_INTERVAL_ID } from "../constants";
+import { useTimer } from "../hooks/useTimer";
 
 export function Timer() {
-  const ONE_SECOND = 1000;
-  const DEFAULT_INTERVAL_ID = 0;
-
-  const [time, setTime] = useState(10);
-  const [intervalId, setIntervalId] = useState(DEFAULT_INTERVAL_ID);
-
-  const onTimer = () => {
-    //on puase
-    if (intervalId) {
-      clearInterval(intervalId);
-      setIntervalId(DEFAULT_INTERVAL_ID);
-      return;
-    }
-
-    //on time
-    const newIntervalId = setInterval(() => {
-      setTime((prev) => {
-        if (prev - 1 < 0) {
-          onTimer();
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, ONE_SECOND);
-
-    setIntervalId(newIntervalId)
-  };
+  const { time, isActive, onTimer} = useTimer();
 
   return (
     <div>
@@ -42,7 +17,7 @@ export function Timer() {
         onClick={onTimer}
         className="bg-red-300 py-2 px-12 rounded-full font-bold"
       >
-        {intervalId === DEFAULT_INTERVAL_ID ? "Start" : "Pause"}
+        {!isActive ? "Start" : "Pause"}
       </button>
     </div>
   );
