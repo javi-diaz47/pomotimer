@@ -3,4 +3,8 @@ export interface Time {
   sec: number;
 }
 
+export interface Icon {
+  className?: string;
+}
+
 
