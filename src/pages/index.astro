@@ -1,13 +1,19 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { Timer } from "../components/Timer.tsx";
+import { Button } from "../components/Button";
 ---
 
 <Layout title="Pomotimer">
   <header>
     <p>Pomo<span>Timer</span></p>
-    <button>menu </button>
   </header>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/statistics">Statistics</a></li>
+    </ul>
+  </nav>
   <main>
     <section>
       <Timer client:load />
