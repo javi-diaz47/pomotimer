@@ -1,5 +1,5 @@
 import type { Time } from "../types";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { timeToString } from "../utils";
 import {
   ONE_SECOND,
@@ -8,56 +8,68 @@ import {
   END_TIME,
 } from "../constants";
 
-export const useTimer = () => {
+export const useTimer = (pomotime: Time) => {
   const [time, setTime] = useState<Time>(DEFAULT_TIME);
-  const [intervalId, setIntervalId] = useState(DEFAULT_INTERVAL_ID);
-
+  const [inPause, setInPause] = useState(false);
+  const intervalId = useRef(DEFAULT_INTERVAL_ID);
   const timeString = timeToString(time);
 
-  const isActive = () => Boolean(intervalId)
+  let endDate: Date | null = null;
 
-  const getRemainTime = ({ min, sec }: Time): Time => {
-    if (min == 0 && sec == 0) return { min, sec };
+  const getEndDate = (remain: Time) => {
+    endDate = new Date();
+    endDate.setMinutes(endDate.getMinutes() + remain.min);
+    endDate.setSeconds(endDate.getSeconds() + remain.sec);
+  };
 
-    if (sec == 0) {
-      return {
-        min: min - 1,
-        sec: 59,
-      };
-    }
+  const getRemainTime = (): Time => {
+    if (endDate === null) return DEFAULT_TIME;
+
+    const currDate = new Date();
+
+    const remain = new Date(endDate.getTime() - currDate.getTime());
 
     return {
-      min,
-      sec: sec - 1,
+      min: remain.getMinutes(),
+      sec: remain.getSeconds(),
     };
   };
 
-  const onTimer = () => {
-    //on puase
-    if (intervalId) {
-      clearInterval(intervalId);
-      setIntervalId(DEFAULT_INTERVAL_ID);
+  const pause = () => {
+    clearInterval(intervalId.current);
+    intervalId.current = DEFAULT_INTERVAL_ID;
+    setInPause(true);
+  };
+
+  const play = () => {
+    if (intervalId.current) {
+      pause();
       return;
     }
 
-    //on time
-    const newIntervalId = setInterval(() => {
-      setTime((prev) => {
-        if (prev === END_TIME) {
-          onTimer();
+    if (inPause) {
+      getEndDate(time);
+      setInPause(false);
+    } else {
+      getEndDate(pomotime);
+    }
+
+    intervalId.current = setInterval(() => {
+      setTime(() => {
+        const remain = getRemainTime();
+        if (remain.min === 0 && remain.sec === 0) {
+          pause();
           return END_TIME;
         }
-
-        return getRemainTime(prev);
+        return remain;
       });
     }, ONE_SECOND);
-
-    setIntervalId(newIntervalId);
   };
 
   return {
     time: timeString,
-    onTimer,
-    isActive
+    play,
+    pause,
+    isActive: intervalId.current,
   };
 };

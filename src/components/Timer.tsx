@@ -1,8 +1,8 @@
-import { DEFAULT_INTERVAL_ID } from "../constants";
+import { DEFAULT_TIME } from "../constants";
 import { useTimer } from "../hooks/useTimer";
 
 export function Timer() {
-  const { time, isActive, onTimer} = useTimer();
+  const { time, isActive, play, pause } = useTimer(DEFAULT_TIME);
 
   return (
     <div>
@@ -14,10 +14,17 @@ export function Timer() {
         <span className="text-2xl">1/4</span>
       </div>
       <button
-        onClick={onTimer}
+        onClick={play}
         className="bg-red-300 py-2 px-12 rounded-full font-bold"
       >
-        {!isActive ? "Start" : "Pause"}
+        Start
+      </button>
+      <button
+        onClick={pause}
+        className={`bg-red-300 py-2 px-12 rounded-full font-bold
+          transition-transform ease-out ${isActive ? "scale-1" : "scale-0"}`}
+      >
+        Pause
       </button>
     </div>
   );
