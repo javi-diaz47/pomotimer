@@ -5,9 +5,8 @@ import { twMerge } from "tailwind-merge";
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
-  console.log(isOpen);
+
   const toggleNavbar = () => {
-    console.log(isOpen);
     const newOpen = !isOpen;
     setIsOpen(newOpen);
   };
