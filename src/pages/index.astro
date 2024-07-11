@@ -1,14 +1,19 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import MenuIcon from "../icons/MenuIcon.astro";
 import { Timer } from "../components/Timer.tsx";
-import { Button } from "../components/Button";
 ---
 
 <Layout title="Pomotimer">
-  <header>
-    <p>Pomo<span>Timer</span></p>
+  <header class="flex justify-between px-4 max-w-sm">
+    <p class="font-extrabold">Pomo<span class="text-red-400">Timer</span></p>
+    <button id="btn">
+      <MenuIcon className="size-7" />
+    </button>
   </header>
-  <nav>
+  <nav
+    class="fixed top-0 -right-full w-full h-full bg-primary transition-all ease-in-out"
+  >
     <ul>
       <li><a href="/">Home</a></li>
       <li><a href="/statistics">Statistics</a></li>
