@@ -1,8 +1,9 @@
 import { DEFAULT_TIME } from "../constants";
 import { useTimer } from "../hooks/useTimer";
+import type { Pomotime } from "../types";
 
-export function Timer() {
-  const { time, isActive, play, cancel } = useTimer(DEFAULT_TIME);
+export function Timer({ pomotime }: Pomotime) {
+  const { time, isActive, play, cancel } = useTimer(pomotime.time);
 
   return (
     <div>
@@ -10,7 +11,7 @@ export function Timer() {
         {time}
       </h2>
       <div className="text-4xl">
-        <p>Work</p>
+        <p>{pomotime.title}</p>
         <span className="text-2xl">1/4</span>
       </div>
       <div className="flex flex-col">

@@ -1,6 +1,17 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { Timer } from "../components/Timer.tsx";
+import type { Pomotime } from "../types";
+
+const pomotime: Pomotime = {
+  time: {
+    min: 0,
+    sec: 5,
+  },
+  title: "work",
+  completed: 1,
+  total: 4,
+};
 ---
 
 <Layout title="Pomotimer">
@@ -10,7 +21,7 @@ import { Timer } from "../components/Timer.tsx";
   </header>
   <main>
     <section>
-      <Timer client:load />
+      <Timer client:load pomotime={pomotime} />
       <div>
         <ul>
           <li>
