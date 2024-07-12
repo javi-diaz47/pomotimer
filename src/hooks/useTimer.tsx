@@ -41,6 +41,11 @@ export const useTimer = (pomotime: Time) => {
     setInPause(true);
   };
 
+  const cancel = () => {
+    pause()
+    setTime(pomotime)
+  }
+
   const play = () => {
     if (intervalId.current) {
       pause();
@@ -70,6 +75,7 @@ export const useTimer = (pomotime: Time) => {
     time: timeString,
     play,
     pause,
+    cancel,
     isActive: intervalId.current,
   };
 };
