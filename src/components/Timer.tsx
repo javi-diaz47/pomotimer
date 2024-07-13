@@ -1,9 +1,13 @@
 import { DEFAULT_TIME } from "../constants";
-import { useTimer } from "../hooks/useTimer";
-import type { Pomotime } from "../types";
+import { type Timer } from "../hooks/useTimer";
 
-export function Timer({ pomotime }: Pomotime) {
-  const { time, isActive, play, cancel } = useTimer(pomotime.time);
+interface TimerProps extends Timer {
+  title: string,
+  completed: number
+  total: number
+}
+
+export function Timer({ time, isActive, play, cancel, title, completed, total }: TimerProps) {
 
   return (
     <div>
@@ -11,8 +15,8 @@ export function Timer({ pomotime }: Pomotime) {
         {time}
       </h2>
       <div className="text-4xl">
-        <p>{pomotime.title}</p>
-        <span className="text-2xl">1/4</span>
+        <p>{title}</p>
+        <span className="text-2xl">{completed}/{total}</span>
       </div>
       <div className="flex flex-col">
         <button

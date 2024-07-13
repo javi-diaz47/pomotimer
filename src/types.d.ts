@@ -4,10 +4,11 @@ export interface Time {
 }
 
 export interface Pomotime {
-  pomotime: {
-    time: Time,
-    title: string
-    completed: number,
-    total: number
-  },
+  time: Time,
+  breakTime: Time,
+  title: string,
+  completedTime: number,
+  completedBreak: number,
+  onTime: boolean,
+  total: number
 }

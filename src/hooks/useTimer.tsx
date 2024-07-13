@@ -8,7 +8,20 @@ import {
   END_TIME,
 } from "../constants";
 
-export const useTimer = (pomotime: Time) => {
+interface UseTimer {
+  pomotime: Time
+  onFinish?: () => void
+}
+
+export interface Timer {
+  time: string,
+  play: () => void,
+  pause: () => void,
+  cancel: () => void,
+  isActive: boolean
+}
+
+export const useTimer = ({ pomotime, onFinish }: UseTimer): Timer => {
   const [time, setTime] = useState<Time>(DEFAULT_TIME);
   const [inPause, setInPause] = useState(false);
   const intervalId = useRef(DEFAULT_INTERVAL_ID);
@@ -64,6 +77,7 @@ export const useTimer = (pomotime: Time) => {
         const remain = getRemainTime();
         if (remain.min === 0 && remain.sec === 0) {
           pause();
+          if (onFinish) onFinish();
           return END_TIME;
         }
         return remain;
@@ -76,6 +90,6 @@ export const useTimer = (pomotime: Time) => {
     play,
     pause,
     cancel,
-    isActive: intervalId.current,
+    isActive: Boolean(intervalId.current),
   };
 };
