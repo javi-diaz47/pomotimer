@@ -1,35 +1,43 @@
-import { useState } from "react";
-import type { Pomotime } from "../types";
+import { useEffect, useRef, useState } from "react";
+import type { Pomotimer, Time } from "../types";
 import { Timer } from "./Timer";
 import { DEFAULT_POMOTIME } from "../constants";
 import { useTimer } from "../hooks/useTimer";
+import beep from "/audio/short-beep-countdown.mp3"
 
 export function Pomotimer() {
 
-  const [pomotime, setPomotime] = useState<Pomotime>(DEFAULT_POMOTIME)
+  const pomotimer = DEFAULT_POMOTIME
 
-  const currTime = pomotime.onTime ? pomotime.time : pomotime.breakTime
-  const currTitle = pomotime.onTime ? pomotime.title : 'break'
+  const audio = useRef<null | HTMLAudioElement>(null)
+
+  useEffect(() => {
+    audio.current = new Audio(beep)
+  }, [])
 
 
-  const onFinish = () => {
-    console.log('hi')
-    let newPomotime = pomotime
-    if (pomotime.onTime) {
-      newPomotime.completedTime = pomotime.completedTime + 1
-      newPomotime.onTime = false
-    } else {
-      newPomotime.completedBreak = pomotime.completedBreak + 1
-      newPomotime.onTime = true
-    }
-    setPomotime(newPomotime)
+  const onStart = () => {
   }
 
-  const timer = useTimer({ pomotime: currTime, onFinish });
+  const onUpdate = (time: Time | undefined) => {
+
+    if (!audio.current) return;
+
+    if (time && time.min === 0 && time.sec == 3) {
+      audio.current.play()
+    }
+  }
+  const onFinish = () => console.log('finish')
+
+  const onCancel = () => {
+    audio.current?.load()
+  }
+
+  const timer = useTimer({ pomotimer, onFinish, onStart, onUpdate, onCancel });
 
   return (
     <div>
-      <Timer  {...timer} title={currTitle} completed={pomotime.completedTime} total={pomotime.total} />
+      <Timer  {...timer} />
     </div>
   )
 }
