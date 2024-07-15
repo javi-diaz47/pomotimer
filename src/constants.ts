@@ -1,17 +1,24 @@
-import type { Pomotime, Time } from "./types";
+import type { Pomotime, Pomotimer, Time } from "./types";
 
-export const ONE_SECOND = 990;
+export const ONE_SECOND = 250;
 export const DEFAULT_INTERVAL_ID = 0;
 export const DEFAULT_TIME: Time = { min: 0, sec: 5 };
 export const END_TIME: Time = { min: 0, sec: 0 };
 
-export const DEFAULT_POMOTIME: Pomotime = {
-  time: DEFAULT_TIME,
-  breakTime: DEFAULT_TIME,
-  title: "work",
-  completedTime: 1,
-  completedBreak: 1,
+export const WORK_TIME: Pomotime = {
+  time: { min: 0, sec: 10 },
+  title: 'Work',
+}
+
+export const BREAK_TIME: Pomotime = {
+  time: { min: 0, sec: 15 },
+  title: 'Break',
+}
+
+export const DEFAULT_POMOTIME: Pomotimer = {
+  pomotimes: [WORK_TIME, BREAK_TIME],
   onTime: true,
+  completed: 1,
   total: 4,
 };
 

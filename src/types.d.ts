@@ -5,10 +5,12 @@ export interface Time {
 
 export interface Pomotime {
   time: Time,
-  breakTime: Time,
   title: string,
-  completedTime: number,
-  completedBreak: number,
+}
+
+export interface Pomotimer {
+  pomotimes: Pomotime[],
   onTime: boolean,
+  completed: number,
   total: number
 }
