@@ -2,10 +2,11 @@ import type { Pomotimer, Time } from "../types";
 import { useEffect, useRef, useState } from "react";
 import { timeToString } from "../utils";
 import {
-  ONE_SECOND,
   DEFAULT_INTERVAL_ID,
   DEFAULT_TIME,
   END_TIME,
+  MILISECONDS_PER_FRAME,
+  ONE_SECOND,
 } from "../constants";
 
 interface UseTimer {
@@ -51,7 +52,7 @@ export const useTimer = ({ pomotimer, onFinish, onUpdate, onStart, onCancel }: U
   const getEndDate = (remain: Time) => {
     endDate = new Date();
     endDate.setMinutes(endDate.getMinutes() + remain.min);
-    endDate.setSeconds(endDate.getSeconds() + remain.sec);
+    endDate.setSeconds(endDate.getSeconds() + remain.sec + ONE_SECOND);
   };
 
   const getRemainTime = (): Time => {
@@ -117,8 +118,11 @@ export const useTimer = ({ pomotimer, onFinish, onUpdate, onStart, onCancel }: U
       return;
     }
 
+    console.log('new')
+
     if (inPause) {
       getEndDate(time);
+      console.log(getRemainTime())
       setInPause(false);
     } else {
       getEndDate(currTime);
@@ -144,7 +148,7 @@ export const useTimer = ({ pomotimer, onFinish, onUpdate, onStart, onCancel }: U
         end()
       }
 
-    }, ONE_SECOND);
+    }, MILISECONDS_PER_FRAME);
 
 
   };
