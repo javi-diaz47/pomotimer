@@ -30,7 +30,9 @@ const { title } = Astro.props;
       </a>
       <HeaderNavbar client:visible />
     </header>
-    <slot />
+    <div class="max-w-2xl px-4">
+      <slot />
+    </div>
   </body>
 </html>
 
