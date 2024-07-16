@@ -3,7 +3,7 @@ import { MenuIcon } from "../icons/MenuIcon";
 import { XIcon } from "../icons/XIcon";
 import { twMerge } from "tailwind-merge";
 
-export function Header() {
+export function HeaderNavbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleNavbar = () => {
@@ -12,10 +12,7 @@ export function Header() {
   };
 
   return (
-    <header className="flex justify-between px-4 max-w-2xl bg-white py-2 shadow-neutral-200 shadow-lg">
-      <p className="font-extrabold">
-        Pomo<span className="text-red-400">Timer</span>
-      </p>
+    <>
       <button
         onClick={toggleNavbar}
         className="relative size-12 rounded-xl grid place-items-center z-10"
@@ -43,6 +40,6 @@ export function Header() {
           </li>
         </ul>
       </nav>
-    </header>
+    </>
   );
 }
