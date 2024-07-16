@@ -1,5 +1,8 @@
 ---
-import { Header } from "../components/Header.tsx";
+import "@fontsource/poppins/400.css";
+import "@fontsource/poppins/700.css";
+
+import { HeaderNavbar } from "../components/HeaderNavbar.tsx";
 
 interface Props {
   title: string;
@@ -19,7 +22,16 @@ const { title } = Astro.props;
     <title>{title}</title>
   </head>
   <body class="text-primary text-4xl bg-neutral-100">
-    <Header client:visible />
+    <header
+      class="flex justify-between px-4 max-w-2xl bg-white py-2 shadow-neutral-200 shadow-lg"
+    >
+      <a href="/" class="font-bold">
+        Pomo<span class="text-red-400">Timer</span>
+      </a>
+      <HeaderNavbar client:visible />
+    </header>
     <slot />
   </body>
 </html>
+
+<style></style>
