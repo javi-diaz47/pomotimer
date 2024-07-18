@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { type Timer } from '../hooks/useTimer'
-import { setSourceMapRange } from 'typescript'
-import { twMerge } from 'tailwind-merge'
+import { useGSAP } from '@gsap/react'
+import gsap from 'gsap'
+
 
 interface TimerProps extends Timer {
   title: string
@@ -20,32 +21,67 @@ export function Timer({
   total,
 }: TimerProps) {
 
-  // TODO 
-  // the stop the animation when the timer stop
+  const tl = useRef<any>()
+  const onFirstRender = useRef(true)
 
-  const animation = useRef<{ animation: string }>({ animation: '' })
+  useGSAP(() => {
+
+    tl.current = gsap.timeline()
+      .set('#spinner', {
+        strokeDasharray: "0 2390",
+        cx: 200,
+        r: 300,
+      }).to('#spinner', {
+        cx: 400,
+        r: 380,
+        duration: 0.5,
+      }).to('#spinner', {
+        strokeDasharray: "2390 2390",
+        duration: timeInSeconds,
+        ease: 'linear'
+      }).to('#spinner', {
+        r: 250,
+        duration: 0.5,
+      }).set('#spinner', {
+        strokeDasharray: "0 2390"
+      })
+
+    if (onFirstRender.current) {
+      tl.current.pause()
+    } else {
+      tl.current.play()
+    }
+
+
+  }, [title])
 
   useEffect(() => {
+    onFirstRender.current = false
+  }, [])
+
+  const onPlay = () => {
+
     if (isActive) {
-      animation.current = {
-        animation: `
-          in 0.1s cubic-bezier(0.5, 0.79, 0.74, 1.02) forwards,
-          progress ${timeInSeconds}s linear 0.1s forwards,
-          out 0.1s ease-in-out ${timeInSeconds}s forwards
-       `
-      }
-      return
-    }
-    animation.current = {
-      animation: ''
+      tl.current.pause()
+    } else {
+
+      tl.current.play()
     }
 
-  }, [isActive])
+    play()
+
+  }
+
+  const onCancel = () => {
+    tl.current.seek(0)
+    tl.current.pause()
+
+    cancel()
+  }
 
 
   return (
     <section className={`flex flex-col items-center gap-8`}>
-
       <div className='relative w-64 aspect-square -z-10 ' >
         <div className='relative w-64 aspect-square bg-white rounded-full flex justify-center items-center shadow-[4px_4px_30px_0_#d86971]' >
           <div className=''>
@@ -63,7 +99,7 @@ export function Timer({
           </div>
           <div className='w-[17.5rem] absolute -rotate-90 -z-10'>
             <svg viewBox="0 0 800 800" className="stroke-red-400">
-              <circle style={animation.current} cx="400px" cy="400px" r="30px" strokeWidth="45px" fill='none'
+              <circle id="spinner" cx="400px" cy="400px" r="30px" strokeWidth="45px" fill='none'
                 strokeDasharray='0 2390' strokeLinecap='round'>
               </circle>
             </svg>
@@ -74,12 +110,12 @@ export function Timer({
       </div>
       <div className="flex flex-col">
         <button
-          onClick={play}
+          onClick={onPlay}
           className="w-56 bg-red-400 py-2 px-12 rounded-full font-bold">
           {!isActive ? 'Start' : 'Pause'}
         </button>
         <button
-          onClick={cancel}
+          onClick={onCancel}
           className={`w-56 bg-white text-red-400 py-2 px-12 rounded-full
           transition-transform ease-out ${isActive ? 'scale-1' : 'scale-0 '}`}>
           Cancel

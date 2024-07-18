@@ -7,7 +7,7 @@ export const DEFAULT_TIME: Time = { min: 0, sec: 5 };
 export const END_TIME: Time = { min: 0, sec: 0 };
 
 export const WORK_TIME: Pomotime = {
-  time: { min: 0, sec: 10 },
+  time: { min: 0, sec: 2 },
   title: 'Work',
 }
 
