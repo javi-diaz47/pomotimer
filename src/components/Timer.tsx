@@ -1,7 +1,5 @@
-import { useEffect, useRef } from 'react'
 import { type Timer } from '../hooks/useTimer'
-import { useGSAP } from '@gsap/react'
-import gsap from 'gsap'
+import { useTimerAnimation } from '../hooks/useTimerAnimation'
 
 
 interface TimerProps extends Timer {
@@ -21,63 +19,7 @@ export function Timer({
   total,
 }: TimerProps) {
 
-  const tl = useRef<any>()
-  const onFirstRender = useRef(true)
-
-  useGSAP(() => {
-
-    tl.current = gsap.timeline()
-      .set('#spinner', {
-        strokeDasharray: "0 2390",
-        cx: 200,
-        r: 300,
-      }).to('#spinner', {
-        cx: 400,
-        r: 380,
-        duration: 0.5,
-      }).to('#spinner', {
-        strokeDasharray: "2390 2390",
-        duration: timeInSeconds,
-        ease: 'linear'
-      }).to('#spinner', {
-        r: 250,
-        duration: 0.5,
-      }).set('#spinner', {
-        strokeDasharray: "0 2390"
-      })
-
-    if (onFirstRender.current) {
-      tl.current.pause()
-    } else {
-      tl.current.play()
-    }
-
-
-  }, [title])
-
-  useEffect(() => {
-    onFirstRender.current = false
-  }, [])
-
-  const onPlay = () => {
-
-    if (isActive) {
-      tl.current.pause()
-    } else {
-
-      tl.current.play()
-    }
-
-    play()
-
-  }
-
-  const onCancel = () => {
-    tl.current.seek(0)
-    tl.current.pause()
-
-    cancel()
-  }
+  const { onTogglePlay, onCancel } = useTimerAnimation({ timeInSeconds, isActive, play, cancel, title })
 
 
   return (
@@ -110,7 +52,7 @@ export function Timer({
       </div>
       <div className="flex flex-col">
         <button
-          onClick={onPlay}
+          onClick={onTogglePlay}
           className="w-56 bg-red-400 py-2 px-12 rounded-full font-bold">
           {!isActive ? 'Start' : 'Pause'}
         </button>
