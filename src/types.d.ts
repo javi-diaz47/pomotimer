@@ -18,3 +18,10 @@ export interface Pomotimer {
   completed: number
   total: number
 }
+
+export interface Card {
+  id: number,
+  icon: string,
+  title: string,
+  times: [number, number]
+}
