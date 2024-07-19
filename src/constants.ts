@@ -1,4 +1,4 @@
-import type { Pomotime, Pomotimer, Time } from "./types";
+import type { Card, Pomotime, Pomotimer, Time } from "./types";
 
 export const ONE_SECOND = 1;
 export const MILISECONDS_PER_FRAME = 250;
@@ -22,5 +22,10 @@ export const DEFAULT_POMOTIME: Pomotimer = {
   completed: 1,
   total: 4,
 };
+
+export const DEFAULT_CARDS: Card[] = [
+  { id: 0, icon: "💼", title: "work", times: [25, 5] },
+  { id: 1, icon: "📖", title: "Read", times: [25, 5] }
+]
 
 
