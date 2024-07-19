@@ -1,44 +1,22 @@
-import { useEffect, useRef, useState } from "react";
-import type { Pomotimer, Time } from "../types";
+import type { Pomotimer } from "../types";
 import { Timer } from "./Timer";
-import { DEFAULT_POMOTIME } from "../constants";
-import { useTimer } from "../hooks/useTimer";
-import beep from "/audio/short-beep-countdown.mp3"
+import { TimerControls } from "./TimerControls";
+import { usePomotimer } from "../hooks/usePomotimer";
+import { useTimerAnimation } from "../hooks/useTimerAnimation";
 
 export function Pomotimer() {
 
-  const pomotimer = DEFAULT_POMOTIME
+  const { time, timeInSeconds, isActive, title, completed, total, play, cancel } = usePomotimer()
 
-  const audio = useRef<null | HTMLAudioElement>(null)
-
-  useEffect(() => {
-    audio.current = new Audio(beep)
-  }, [])
-
-
-  const onStart = () => {
-  }
-
-  const onUpdate = (time: Time | undefined) => {
-
-    if (!audio.current) return;
-
-    if (time && time.min === 0 && time.sec == 3) {
-      audio.current.play()
-    }
-  }
-  const onFinish = () => console.log('finish')
-
-  const onCancel = () => {
-    audio.current?.load()
-  }
-
-  const timer = useTimer({ pomotimer, onFinish, onStart, onUpdate, onCancel });
+  const { onTogglePlay, onCancel } = useTimerAnimation({ timeInSeconds, isActive, play, cancel, title })
 
   return (
-    <div>
-      <Timer  {...timer} />
-    </div>
+    <section className={`flex flex-col items-center gap-8`}>
+      <Timer time={time} title={title} completed={completed} total={total} />
+      <div>
+      </div>
+      <TimerControls isActive={isActive} onTogglePlay={onTogglePlay} onCancel={onCancel} />
+    </section >
   )
 }
 
