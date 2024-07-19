@@ -17,7 +17,9 @@ interface UseTimer {
   onStart?: (time?: Time) => void
 }
 
+// timeInSeconds return the total time of a round mesure in seconds
 export interface Timer {
+  timeInSeconds: number
   time: string,
   title: string,
   completed: number,
@@ -155,6 +157,7 @@ export const useTimer = ({ pomotimer, onFinish, onUpdate, onStart, onCancel }: U
 
   return {
     time: timeString,
+    timeInSeconds: time.min * 60 + time.sec,
     title,
     total: pomotimer.total,
     completed: pomotimer.completed,
