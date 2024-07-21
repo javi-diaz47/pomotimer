@@ -14,14 +14,13 @@ export interface Pomotime {
 
 export interface Pomotimer {
   pomotimes: Pomotime[]
-  onTime: boolean
   completed: number
   total: number
 }
 
 export interface Card {
-  id: number,
+  id: uuid,
   icon: string,
   title: string,
-  times: [number, number]
+  times: [Pomotime, Pomotime]
 }
