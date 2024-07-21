@@ -31,6 +31,7 @@ export interface Timer {
 }
 
 export const useTimer = ({ pomotimer, onFinish, onUpdate, onStart, onCancel }: UseTimer): Timer => {
+
   const [inFirst, setInFirst] = useState(true)
   const [timeIndex, setTimeIndex] = useState(0)
   const { time: currTime, title: currTitle } = pomotimer.pomotimes[timeIndex]
@@ -47,7 +48,7 @@ export const useTimer = ({ pomotimer, onFinish, onUpdate, onStart, onCancel }: U
   const [inPause, setInPause] = useState(false);
 
   const intervalId = useRef(DEFAULT_INTERVAL_ID);
-  const timeString = timeToString(time);
+  const timeString = () => timeToString(time)
 
   let endDate: Date | null = null;
 
@@ -79,8 +80,13 @@ export const useTimer = ({ pomotimer, onFinish, onUpdate, onStart, onCancel }: U
   const cancel = () => {
     pause()
     setInFirst(true)
+
+    const newTimeIndex = 0
+    setTimeIndex(newTimeIndex)
+
     if (onCancel) onCancel()
-    init(timeIndex)
+
+    init(newTimeIndex)
   }
 
   const end = () => {
@@ -101,6 +107,13 @@ export const useTimer = ({ pomotimer, onFinish, onUpdate, onStart, onCancel }: U
   }
 
   useEffect(() => {
+    const { time: currTime, title: currTitle } = pomotimer.pomotimes[timeIndex]
+    setTitle(currTitle)
+    setTime(currTime)
+    console.log()
+  }, [pomotimer])
+
+  useEffect(() => {
     if (intervalId.current) {
       return
     }
@@ -112,7 +125,7 @@ export const useTimer = ({ pomotimer, onFinish, onUpdate, onStart, onCancel }: U
 
     play()
 
-  }, [time])
+  }, [timeIndex])
 
   const play = () => {
     if (intervalId.current) {
@@ -120,11 +133,9 @@ export const useTimer = ({ pomotimer, onFinish, onUpdate, onStart, onCancel }: U
       return;
     }
 
-    console.log('new')
 
     if (inPause) {
       getEndDate(time);
-      console.log(getRemainTime())
       setInPause(false);
     } else {
       getEndDate(currTime);
@@ -156,8 +167,8 @@ export const useTimer = ({ pomotimer, onFinish, onUpdate, onStart, onCancel }: U
   };
 
   return {
-    time: timeString,
-    timeInSeconds: time.min * 60 + time.sec,
+    time: timeString(),
+    timeInSeconds: pomotimer.pomotimes[timeIndex].time.min * 60 + pomotimer.pomotimes[timeIndex].time.sec,
     title,
     total: pomotimer.total,
     completed: pomotimer.completed,

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 
@@ -15,11 +15,11 @@ export function useTimerAnimation({
   isActive,
   play,
   cancel,
-  title,
 }: TimerAnimation) {
 
   const tl = useRef<any>()
   const onFirstRender = useRef(true)
+  const [time, setTime] = useState(timeInSeconds)
 
   useGSAP(() => {
 
@@ -34,7 +34,7 @@ export function useTimerAnimation({
         duration: 0.5,
       }).to('#spinner', {
         strokeDasharray: "2390 2390",
-        duration: timeInSeconds,
+        duration: time,
         ease: 'linear'
       }).to('#spinner', {
         r: 250,
@@ -43,13 +43,19 @@ export function useTimerAnimation({
         strokeDasharray: "0 2390"
       })
 
-    if (onFirstRender.current) {
+
+    if (onFirstRender.current || !isActive) {
       tl.current.pause()
-    } else {
-      tl.current.play()
+      return
     }
 
-  }, [title])
+    tl.current.play()
+
+  }, [time])
+
+  useEffect(() => {
+    setTime(timeInSeconds)
+  }, [timeInSeconds])
 
   useEffect(() => {
     onFirstRender.current = false
