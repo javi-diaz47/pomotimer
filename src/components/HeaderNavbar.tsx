@@ -18,18 +18,18 @@ export function HeaderNavbar() {
         className="relative size-12 rounded-xl grid place-items-center z-10"
       >
         <MenuIcon
-          className={twMerge(isOpen && "sr-only", "size-10 absolute")}
+          className={twMerge(isOpen && "sr-only", "size-10 absolute dark:text-text")}
         />
-        <XIcon className={twMerge(!isOpen && "sr-only", "size-10 absolute text-white")} />
+        <XIcon className={twMerge(!isOpen && "sr-only", "size-10 absolute text-text")} />
       </button>
       <nav
         className={twMerge(
           isOpen && "-right-0",
           !isOpen && "-right-full",
-          "fixed top-0 w-full h-full bg-primary transition-all ease-in-out",
+          "fixed top-0 w-full h-full bg-primary dark:bg-surface transition-all ease-in-out",
         )}
       >
-        <ul className="text-white font-bold w-full h-full flex flex-col justify-center items-center gap-12">
+        <ul className="text-white dark:text-text font-bold w-full h-full flex flex-col justify-center items-center gap-12">
           <li>
             <a href="/" className="line-through">
               Home

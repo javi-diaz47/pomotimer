@@ -7,7 +7,19 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: "hsl(240, 71.43%, 12.35%)",
+        bg: "#f3Effe",
+        primary: "#090936",
+        base: "#232136",
+        surface: "#2a273f",
+        overlay: "#393552",
+        text: "#e0def4",
+        "highlight-low": "#2a283e",
+        "highlight-med": "#44415a",
+        "highlight-high": "#56526e",
+        subtle: "#908caa",
+        love: "#eb6f92",
+        iris: "#c4a7e7"
+
       },
       fontFamily: {
         sans: ['poppins', ...defaultTheme.fontFamily.sans]
