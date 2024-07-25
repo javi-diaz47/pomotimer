@@ -1,40 +1,66 @@
-import type { Pomotimer, Time } from "../types"
 import { useEffect, useRef, useState } from "react"
+import type { Pomotimer } from "../types"
 import { useTimer } from "./useTimer"
-import beep from "/audio/short-beep-countdown.mp3"
+import { timeToString } from "../utils"
 
 export const usePomotimer = (pomotimer: Pomotimer) => {
 
-  const audio = useRef<null | HTMLAudioElement>(null)
+  const getPomotime = () => pomotimer.pomotimes[timeIndex]
 
-  useEffect(() => {
-    audio.current = new Audio(beep)
-  }, [])
+  const [timeIndex, setTimeIndex] = useState(0)
+
+  const [isActive, setIsActive] = useState(false)
+
+  const autostart = useRef(false)
 
 
-  const onStart = () => { }
-
-  const onUpdate = (time: Time | undefined) => {
-
-    if (!audio.current) return;
-
-    if (time && time.min === 0 && time.sec == 3) {
-      audio.current.play()
-    }
+  const onStartRound = () => {
+    setIsActive(true)
   }
 
-  const onFinish = () => { }
+  const onFinishRound = () => {
+    if (!autostart.current) autostart.current = true
+
+    setIsActive(false)
+
+    if (timeIndex === pomotimer.pomotimes.length - 1) {
+      setTimeIndex(0)
+      return
+    }
+
+    const newTimeIndex = timeIndex + 1
+    setTimeIndex(newTimeIndex)
+
+  }
 
   const onCancel = () => {
-    audio.current?.load()
+    setIsActive(false)
   }
 
-  const timer = useTimer({ pomotimer, onFinish, onStart, onUpdate, onCancel });
+  const timer = useTimer({
+    totalTime: getPomotime().time,
+    autostart: autostart.current,
+    onStart: onStartRound,
+    onFinish: onFinishRound,
+    onCancel
+  });
 
-  //console.log('usePomotimer <-', timer.title, pomotimer.pomotimes[0].title)
+
+  const { time, isPause, play, pause, cancel } = timer
+
+
   return {
-    ...timer
+    time: timeToString(time),
+    isActive,
+    isPause,
+    play,
+    pause,
+    cancel,
+    timeInSeconds: pomotimer.pomotimes[timeIndex].time.min * 60 + pomotimer.pomotimes[timeIndex].time.sec,
+    title: getPomotime().title,
+    total: pomotimer.total,
+    completed: pomotimer.completed,
+
   }
-
-
 }
+

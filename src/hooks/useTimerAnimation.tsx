@@ -1,19 +1,24 @@
 import { useEffect, useRef, useState } from 'react'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
+import { ONE_SECOND } from '../constants'
 
 export interface TimerAnimation {
   timeInSeconds: number
   title: string,
   play: () => void,
+  pause: () => void,
   cancel: () => void,
   isActive: boolean
+  isPause: boolean
 }
 
 export function useTimerAnimation({
   timeInSeconds,
   isActive,
+  isPause,
   play,
+  pause,
   cancel,
 }: TimerAnimation) {
 
@@ -34,7 +39,7 @@ export function useTimerAnimation({
         duration: 0.5,
       }).to('#spinner', {
         strokeDasharray: "2390 2390",
-        duration: time,
+        duration: time - ONE_SECOND / 2,
         ease: 'linear'
       }).to('#spinner', {
         r: 250,
@@ -63,13 +68,13 @@ export function useTimerAnimation({
 
   const onTogglePlay = () => {
 
-    if (isActive) {
+    if (!isPause) {
       tl.current.pause()
-    } else {
-
-      tl.current.play()
+      pause()
+      return
     }
 
+    tl.current.play()
     play()
 
   }

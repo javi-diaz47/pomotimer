@@ -22,5 +22,5 @@ export interface Card {
   id: uuid,
   icon: string,
   title: string,
-  times: [Pomotime, Pomotime]
+  times: Pomotime[]
 }
