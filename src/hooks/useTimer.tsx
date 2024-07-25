@@ -112,7 +112,9 @@ export const useTimer = ({ autostart, totalTime, onFinish, onUpdate, onStart, on
           end()
           return { min: 0, sec: 1 };
         }
+
         if (onUpdate) onUpdate(remain)
+
         return remain;
       });
 

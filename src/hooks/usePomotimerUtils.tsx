@@ -1,6 +1,4 @@
-import type { Pomotimer, Time } from "../types"
-import { useEffect, useRef, useState } from "react"
-import { useTimer } from "./useTimer"
+import { useEffect, useRef } from "react"
 import beep from "/audio/short-beep-countdown.mp3"
 
 export const usePomotimerUtils = () => {
@@ -12,29 +10,26 @@ export const usePomotimerUtils = () => {
   }, [])
 
 
-  const onStart = () => { }
+  const onPlayAudio = () => {
 
-  const onUpdate = (time: Time | undefined) => {
 
-    if (!audio.current) return;
+    console.log('play')
 
-    if (time && time.min === 0 && time.sec == 3) {
-      audio.current.play()
-    }
+    audio.current?.play()
   }
 
-  const onFinish = () => { }
+  const onPauseAudio = () => {
+    audio.current?.pause()
+  }
 
-  const onCancel = () => {
+  const onCancelAudio = () => {
     audio.current?.load()
   }
 
   return {
-    onStart,
-    onUpdate,
-    onFinish,
-    onCancel,
-    audio
+    onPlayAudio,
+    onPauseAudio,
+    onCancelAudio,
   }
 
 
