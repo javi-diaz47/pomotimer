@@ -19,7 +19,7 @@ export const BREAK_TIME: Pomotime = {
 export const DEFAULT_POMOTIME: Pomotimer = {
   pomotimes: [WORK_TIME, BREAK_TIME],
   completed: 1,
-  total: 4,
+  total: 2,
 };
 
 export const DEFAULT_CARDS: Card[] = [
@@ -28,8 +28,9 @@ export const DEFAULT_CARDS: Card[] = [
     icon: "💼",
     title: "work",
     times: [
-      { time: { min: 25, sec: 0 }, title: 'Work' },
-      { time: { min: 5, sec: 0 }, title: 'Break' }
+      { time: { min: 0, sec: 6 }, title: 'Prep' },
+      { time: { min: 0, sec: 4 }, title: 'Work' },
+      { time: { min: 0, sec: 2 }, title: 'Break' }
     ]
   },
   {

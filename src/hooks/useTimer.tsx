@@ -1,6 +1,5 @@
-import type { Pomotimer, Time } from "../types";
+import type { Pomotime, Time } from "../types";
 import { useEffect, useRef, useState } from "react";
-import { timeToString } from "../utils";
 import {
   DEFAULT_INTERVAL_ID,
   DEFAULT_TIME,
@@ -10,45 +9,34 @@ import {
 } from "../constants";
 
 interface UseTimer {
-  pomotimer: Pomotimer
+  totalTime: Time
+  autostart: boolean
   onFinish?: (time?: Time) => void
   onUpdate?: (time?: Time) => void
   onCancel?: (time?: Time) => void
+  onPause?: (time?: Time) => void
   onStart?: (time?: Time) => void
 }
 
 // timeInSeconds return the total time of a round mesure in seconds
 export interface Timer {
-  timeInSeconds: number
-  time: string,
-  title: string,
-  completed: number,
-  total: number,
+  time: Time,
   play: () => void,
   pause: () => void,
   cancel: () => void,
   isActive: boolean
+  isPause: boolean
 }
+export const isEndTime = (time: Time) =>
+  time.min == END_TIME.min && time.sec == END_TIME.sec
 
-export const useTimer = ({ pomotimer, onFinish, onUpdate, onStart, onCancel }: UseTimer): Timer => {
+export const useTimer = ({ autostart, totalTime, onFinish, onUpdate, onStart, onCancel, onPause }: UseTimer): Timer => {
 
-  const [inFirst, setInFirst] = useState(true)
-  const [timeIndex, setTimeIndex] = useState(0)
-  const { time: currTime, title: currTitle } = pomotimer.pomotimes[timeIndex]
+  const [time, setTime] = useState<Time>(totalTime);
 
-  const [title, setTitle] = useState(currTitle)
-  const [time, setTime] = useState<Time>(currTime);
-
-  const init = (timeIndex: number) => {
-    const { time: currTime, title: currTitle } = pomotimer.pomotimes[timeIndex]
-    setTime(currTime)
-    setTitle(currTitle)
-  }
-
-  const [inPause, setInPause] = useState(false);
+  const [inPause, setInPause] = useState(true);
 
   const intervalId = useRef(DEFAULT_INTERVAL_ID);
-  const timeString = () => timeToString(time)
 
   let endDate: Date | null = null;
 
@@ -71,74 +59,46 @@ export const useTimer = ({ pomotimer, onFinish, onUpdate, onStart, onCancel }: U
     };
   };
 
-  const pause = () => {
+  const removeInterval = () => {
     clearInterval(intervalId.current);
     intervalId.current = DEFAULT_INTERVAL_ID;
+  }
+
+  const pause = () => {
+    removeInterval()
     setInPause(true);
+
+    if (onPause) onPause()
   };
 
   const cancel = () => {
-    pause()
-    setInFirst(true)
-
-    const newTimeIndex = 0
-    setTimeIndex(newTimeIndex)
+    removeInterval()
+    setTime(totalTime)
+    setInPause(true)
 
     if (onCancel) onCancel()
 
-    init(newTimeIndex)
   }
 
   const end = () => {
-    pause();
+    removeInterval()
+
     if (onFinish) onFinish()
 
-    let newTimeIndex = timeIndex
-
-    if (timeIndex === pomotimer.pomotimes.length - 1) {
-      pomotimer.completed += 1
-      newTimeIndex = 0
-    } else {
-      newTimeIndex += 1
-    }
-
-    setTimeIndex(newTimeIndex)
-    init(newTimeIndex)
   }
-
-  useEffect(() => {
-    const { time: currTime, title: currTitle } = pomotimer.pomotimes[timeIndex]
-    setTitle(currTitle)
-    setTime(currTime)
-    console.log()
-  }, [pomotimer])
-
-  useEffect(() => {
-    if (intervalId.current) {
-      return
-    }
-
-    if (inFirst) {
-      setInFirst(false)
-      return
-    }
-
-    play()
-
-  }, [timeIndex])
 
   const play = () => {
     if (intervalId.current) {
-      pause();
+      removeInterval()
       return;
     }
-
 
     if (inPause) {
       getEndDate(time);
       setInPause(false);
     } else {
-      getEndDate(currTime);
+      getEndDate(totalTime);
+      setTime(totalTime)
     }
 
     if (onStart) onStart()
@@ -146,18 +106,17 @@ export const useTimer = ({ pomotimer, onFinish, onUpdate, onStart, onCancel }: U
     intervalId.current = setInterval(() => {
       const remain = getRemainTime();
       setTime(() => {
-        if (remain.min === 59 && remain.sec === 59 ||
-          remain.min === 59 && remain.sec === 58
-        ) {
-          return END_TIME;
+
+        if (isEndTime(remain)) {
+
+          end()
+          return { min: 0, sec: 1 };
         }
         if (onUpdate) onUpdate(remain)
         return remain;
       });
 
-      if (remain.min === 59 && remain.sec === 59 ||
-        remain.min === 59 && remain.sec === 58
-      ) {
+      if (isEndTime(remain)) {
         end()
       }
 
@@ -166,15 +125,27 @@ export const useTimer = ({ pomotimer, onFinish, onUpdate, onStart, onCancel }: U
 
   };
 
+  useEffect(() => {
+
+    setTime(totalTime)
+
+    if (!autostart) return
+
+    play()
+
+    return () => {
+      clearInterval(intervalId.current)
+    }
+  }, [totalTime])
+
+
+
   return {
-    time: timeString(),
-    timeInSeconds: pomotimer.pomotimes[timeIndex].time.min * 60 + pomotimer.pomotimes[timeIndex].time.sec,
-    title,
-    total: pomotimer.total,
-    completed: pomotimer.completed,
+    time,
     play,
     pause,
     cancel,
+    isPause: inPause,
     isActive: Boolean(intervalId.current),
   };
 };

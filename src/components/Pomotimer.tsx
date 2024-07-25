@@ -19,27 +19,29 @@ export function Pomotimer() {
     return {
       pomotimes: card.times,
       completed: 1,
-      total: 4
+      total: 2
     }
   }
 
-  const [pomotimer, setPomotimer] = useState(pomotimerFromCard(card))
+  //  const [pomotimer, setPomotimer] = useState(pomotimerFromCard(card))
+
+  const getPomotimer = () => pomotimerFromCard(card)
 
   const onCard = (card: CardType) => {
     setCard(card)
-    setPomotimer(pomotimerFromCard(card))
+    //   setPomotimer(pomotimerFromCard(card))
+    //console.log(pomotimerFromCard(card))
   }
 
 
-  const { time, timeInSeconds, isActive, title, completed, total, play, cancel } = usePomotimer(pomotimer)
+  const { time, timeInSeconds, isActive, isPause, title, completed, total, play, pause, cancel } = usePomotimer(getPomotimer())
 
-  const { onTogglePlay, onCancel } = useTimerAnimation({ timeInSeconds, isActive, play, cancel, title })
+  const { onTogglePlay, onCancel } = useTimerAnimation({ timeInSeconds, isActive, isPause, play, pause, cancel, title })
 
 
   return (
     <section className={twMerge("flex flex-col items-center gap-8", isActive && "gap-44")}>
       <Timer time={time} title={title} completed={completed} total={total} />
-
       <ul className={twMerge("flex flex-col gap-4", isActive && "sr-only")}>
         {
           cards.map((card) => (
@@ -52,8 +54,7 @@ export function Pomotimer() {
           ))
         }
       </ul>
-
-      <TimerControls isActive={isActive} onTogglePlay={onTogglePlay} onCancel={onCancel} />
+      <TimerControls isActive={isActive} isPause={isPause} onTogglePlay={onTogglePlay} onCancel={onCancel} />
     </section >
   )
 }

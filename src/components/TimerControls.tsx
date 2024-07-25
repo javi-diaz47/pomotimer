@@ -1,16 +1,17 @@
 interface TimerControlsProps {
   isActive: boolean
+  isPause: boolean
   onTogglePlay: () => void
   onCancel: () => void
 }
 
-export function TimerControls({ isActive, onTogglePlay, onCancel }: TimerControlsProps) {
+export function TimerControls({ isActive, isPause, onTogglePlay, onCancel }: TimerControlsProps) {
   return (
     <div className="flex flex-col gap-2">
       <button
         onClick={onTogglePlay}
         className="w-56 bg-red-400 dark:bg-love dark:text-text py-2 px-12 rounded-full font-bold shadow-sm shadow-red-400 dark:shadow-love">
-        {!isActive ? 'Start' : 'Pause'}
+        {isPause ? 'Start' : 'Pause'}
       </button>
       <button
         onClick={onCancel}
