@@ -14,12 +14,13 @@ export function Pomotimer() {
 
   const [card, setCard] = useState<CardType>(DEFAULT_CARDS[0])
 
-
+  //TODO:
+  //Card must have the total rounds
   const pomotimerFromCard = (card: CardType): Pomotimer => {
     return {
       pomotimes: card.times,
       completed: 1,
-      total: 2
+      total: 1
     }
   }
 

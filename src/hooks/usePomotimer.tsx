@@ -8,9 +8,15 @@ export const usePomotimer = (pomotimer: Pomotimer) => {
 
   const getPomotime = () => pomotimer.pomotimes[timeIndex]
 
+
   const [timeIndex, setTimeIndex] = useState(0)
 
   const [isActive, setIsActive] = useState(false)
+
+
+  const total = useRef(pomotimer.total * pomotimer.pomotimes.length) // 4 in default card
+
+  const [completed, setCompleted] = useState(1)
 
   const { onPlayAudio, onPauseAudio, onCancelAudio } = usePomotimerUtils()
 
@@ -35,6 +41,16 @@ export const usePomotimer = (pomotimer: Pomotimer) => {
 
     setIsActive(false)
 
+    const newCompleted = completed + 1
+    setCompleted(newCompleted)
+
+    if (newCompleted > total.current) {
+      setCompleted(1)
+      setTimeIndex(0)
+      autostart.current = false
+      return
+    }
+
     if (timeIndex === pomotimer.pomotimes.length - 1) {
       setTimeIndex(0)
       return
@@ -51,6 +67,9 @@ export const usePomotimer = (pomotimer: Pomotimer) => {
 
   const onCancel = () => {
     setIsActive(false)
+    setCompleted(1)
+    setTimeIndex(0)
+    autostart.current = false
     onCancelAudio()
   }
 
@@ -78,7 +97,7 @@ export const usePomotimer = (pomotimer: Pomotimer) => {
     timeInSeconds: pomotimer.pomotimes[timeIndex].time.min * 60 + pomotimer.pomotimes[timeIndex].time.sec,
     title: getPomotime().title,
     total: pomotimer.total,
-    completed: pomotimer.completed,
+    completed: Math.trunc(completed / 2 - 0.1) + 1, // A Round only has two timer work / break
 
   }
 }
