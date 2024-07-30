@@ -1,4 +1,4 @@
-import type { Pomotime, Time } from "../types";
+import type { Time } from "../types";
 import { useEffect, useRef, useState } from "react";
 import {
   DEFAULT_INTERVAL_ID,
@@ -84,6 +84,10 @@ export const useTimer = ({ autostart, totalTime, onFinish, onUpdate, onStart, on
     removeInterval()
 
     if (onFinish) onFinish()
+
+    setTimeout(() => {
+      setInPause(true)
+    }, ONE_SECOND)
 
   }
 
